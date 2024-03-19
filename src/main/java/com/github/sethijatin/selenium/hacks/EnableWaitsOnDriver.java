@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EnableWaitsOnDriver implements WebDriverListener {
 
@@ -33,6 +34,13 @@ public class EnableWaitsOnDriver implements WebDriverListener {
             throw new AutoWaitException("The element you are trying to interact with is not enabled.  Element -> " + element);
         }
         wait.until(ExpectedConditions.elementToBeClickable(element));
+        AtomicInteger counter = new AtomicInteger();
+        String originalFrame = element.getAttribute("outerHTML");
+        wait.until((webDriver) -> {
+             counter.getAndIncrement();
+             String nextFrame = element.getAttribute("outerHTML");
+             return originalFrame.equals(nextFrame) && counter.get() > 2;
+        });
     }
 
     public void beforeGet(WebDriver driver, String url) {
