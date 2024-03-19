@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EnableWaitsOnDriver implements WebDriverListener {
@@ -35,11 +37,18 @@ public class EnableWaitsOnDriver implements WebDriverListener {
         }
         wait.until(ExpectedConditions.elementToBeClickable(element));
         AtomicInteger counter = new AtomicInteger();
-        String originalFrame = element.getAttribute("outerHTML");
+        final List<String> frames = new ArrayList<>();
+        frames.add(element.getAttribute("outerHTML"));
         wait.until((webDriver) -> {
              counter.getAndIncrement();
              String nextFrame = element.getAttribute("outerHTML");
-             return originalFrame.equals(nextFrame) && counter.get() > 2;
+             if (frames.getLast().equals(nextFrame) && counter.get() > 2) {
+                 return true;
+             }
+             else {
+                 frames.addLast(nextFrame);
+                 return false;
+             }
         });
     }
 
