@@ -33,6 +33,14 @@
 
     </dependencies>
 
+    <!-- Specify the distribution management for JitPack -->
+    <distributionManagement>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
